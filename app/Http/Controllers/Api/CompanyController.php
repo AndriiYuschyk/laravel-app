@@ -306,4 +306,107 @@ class CompanyController extends Controller
             'version' => $latestVersion ? $latestVersion->version : 1,
         ], 200);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/companies-kveds",
+     *     summary="Отримати список компаній збережених в системі з їх КВЕДами",
+     *     description="Повертає список всіх компаній збережених в системі з інформацієї про кількість збережених версій і масивом їх КВЕДів кодів з підтримкою пагінації (limit, offset)",
+     *     operationId="listCompaniesWithKveds",
+     *     tags={"Companies"},
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Кількість записів",
+     *         required=false,
+     *         @OA\Schema(type="integer", example=20, default=20)
+     *     ),
+     *     @OA\Parameter(
+     *         name="offset",
+     *         in="query",
+     *         description="Зміщення",
+     *         required=false,
+     *         @OA\Schema(type="integer", example=0, default=0)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Список компаній з КВЕДами",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="company_id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="ТОВ Українська компанія"),
+     *                     @OA\Property(property="edrpou", type="string", example="37027819"),
+     *                     @OA\Property(property="address", type="string", example="43024б Київ, вул. Хрещатик, 44"),
+     *                     @OA\Property(
+     *                         property="kveds",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="code", type="string", example="62.01"),
+     *                             @OA\Property(property="name", type="string", example="Комп'ютерне програмування"),
+     *                             @OA\Property(property="is_primary", type="boolean", example=true)
+     *                         )
+     *                     ),
+     *                     @OA\Property(property="created_at", type="string", example="14.11.2025 18:30:45")
+     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="meta",
+     *                 type="object",
+     *                 @OA\Property(property="page_number", type="integer"),
+     *                 @OA\Property(property="page_size", type="integer"),
+     *                 @OA\Property(property="total_count", type="integer"),
+     *                 @OA\Property(property="total_pages", type="integer")
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function indexCompanyKveds(Request $request): JsonResponse
+    {
+        $limit = (int) $request->get('limit', 20);
+        $offset = (int) $request->get('offset', 0);
+
+        $totalCount = Company::count();
+
+        $companies = Company::with('kveds')
+            ->withCount('versions')
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->offset($offset)
+            ->get();
+
+        $data = $companies->map(function ($company) {
+            return [
+                'company_id' => $company->id,
+                'name' => $company->name,
+                'edrpou' => $company->edrpou,
+                'address' => $company->address,
+                'versions_count' => $company->versions_count,
+                'kveds' => $company->kveds->map(function ($kved) {
+                    return [
+                        'code' => $kved->code,
+                        'name' => $kved->name,
+                        'is_primary' => (bool) $kved->pivot->is_primary,
+                    ];
+                }),
+                'created_at' => \Carbon\Carbon::parse($company->created_at)->format('d.m.Y H:i:s'),
+            ];
+        });
+
+        $pageNumber = $offset > 0 ? (int) floor($offset / $limit) + 1 : 1;
+        $totalPages = $limit > 0 ? (int) ceil($totalCount / $limit) : 0;
+
+        return response()->json([
+            'data' => $data,
+            'meta' => [
+                'page_number' => $pageNumber,
+                'page_size' => $limit,
+                'total_count' => $totalCount,
+                'total_pages' => $totalPages,
+            ],
+        ], 200);
+    }
 }

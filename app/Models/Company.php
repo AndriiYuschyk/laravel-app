@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HandleVersionsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Company extends Model
@@ -21,6 +22,13 @@ class Company extends Model
     public function versions(): HasMany
     {
         return $this->hasMany(CompanyVersion::class);
+    }
+
+    public function kveds(): BelongsToMany
+    {
+        return $this->belongsToMany(Kved::class)
+            ->withPivot('is_primary')
+            ->withTimestamps();
     }
 
     public function getVersionableAttributes(): array

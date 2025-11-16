@@ -18,7 +18,7 @@
         </div>
 
         <div class="space-y-6">
-            <!-- API Documentation -->
+            <!-- Swagger UI Документація -->
             <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition">
                 <h2 class="text-xl font-semibold text-gray-800 mb-2">Swagger UI Документація</h2>
                 <p class="text-gray-600 mb-4">Swagger UI для перегляду документації з можливістю тестування API endpoints</p>
@@ -31,7 +31,7 @@
                 </a>
             </div>
 
-            <!-- Features -->
+            <!-- Функціонал -->
             <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Функціонал</h2>
                 <ul class="space-y-3 text-gray-600">
@@ -49,15 +49,50 @@
                     </li>
                     <li class="flex items-start">
                         <span class="material-icons text-green-500 mr-2 mt-0.5">blur_on</span>
-                        <span>Створено <i>companies</i> i <i>company_versions</i> міграції для створення таблиць БД</span>
+                        <span>Створено <i>companies</i> i <i>company_versions</i> міграції для створення таблиць в БД</span>
                     </li>
                     <li class="flex items-start">
                         <span class="material-icons text-green-500 mr-2 mt-0.5">blur_on</span>
-                        <span>Створено <i>CompanySeeder</i> для наповнення списку компаній</span>
+                        <span>Створено моделі <i>Company</i> і <i>CompanyVersion</i> для взаємодії з відповідними таблицями в БД</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-icons text-green-500 mr-2 mt-0.5">blur_on</span>
+                        <span>Створено сід <i>CompanySeeder</i> для наповнення списку компаній</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-icons text-green-500 mr-2 mt-0.5">blur_on</span>
+                        <span>Реалізовано функціонал збереження версійності записів за допомогою <i>HandleVersionsObserver</i>, <i>Service VersionComparator</i> і <i>HandleVersionsTrait</i></span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-icons text-green-500 mr-2 mt-0.5">blur_on</span>
+                        <span>Реалізовано <i>CompanyRequest</i> для валідації і попередньої "підготовки" надісланих даних</span>
                     </li>
                     <li class="flex items-start">
                         <span class="material-icons text-green-500 mr-2 mt-0.5">blur_on</span>
                         <span>Створено <i>CompanyControllerTest</i> для тестування роботи функціоналу</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Додатковий функціонал -->
+            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Додатковий функціонал (який не вплинув на результат тестового завдання, але був реалізований для демонстрації навичок роботи з pivot таблицями і зв'язками багато до багатьох)</h2>
+                <ul class="space-y-3 text-gray-600">
+                    <li class="flex items-start">
+                        <span class="material-icons text-green-500 mr-2 mt-0.5">blur_on</span>
+                        <span>Створено додаткову таблицю <b>kveds</b> і <b>pivot</b> таблицю <b>company_kved</b> яка реалізовує зва'язок багато до багатьох між компаніями і їх КВЕДами</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-icons text-green-500 mr-2 mt-0.5">blur_on</span>
+                        <span>Створено <i>kveds</i> i <i>company_kved</i> міграції для створення таблиць в БД</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-icons text-green-500 mr-2 mt-0.5">blur_on</span>
+                        <span>Створено <i>KvedSeeder</i> і <i>CompanyKvedSeeder</i> для наповнення списку КВЕдів і прив'язки їх до компаній</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-icons text-green-500 mr-2 mt-0.5">blur_on</span>
+                        <span>Отримати список компаній збережених в системі з їх КВЕДами за роутом <b>api/companies-kveds</b></span>
                     </li>
                 </ul>
             </div>
