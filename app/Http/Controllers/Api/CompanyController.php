@@ -9,6 +9,7 @@ use App\Models\Company;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @OA\Info(
@@ -274,6 +275,12 @@ class CompanyController extends Controller
         if (!$company) {
             $company = Company::create($payload);
 
+            log::info('Created new Company: ', array_merge([
+                'company_id' => $company->id,
+                'version' => 1,
+                'status' => CategoryVersionStatus::CREATED->value,
+            ], $payload));
+
             return response()->json([
                 'status' => CategoryVersionStatus::CREATED->value,
                 'company_id' => $company->id,
@@ -285,10 +292,16 @@ class CompanyController extends Controller
 
         $latestVersion = $company->latestVersion();
         $wasUpdated = $company->wasChanged(['name', 'address']);
+        $status = $wasUpdated ? CategoryVersionStatus::UPDATED->value : CategoryVersionStatus::DUPLICATE->value;
 
+        log::info("Company data was {$status}: ", array_merge([
+            'company_id' => $company->id,
+            'version' => $latestVersion ? $latestVersion->version : 1,
+            'status' => $status,
+        ], $payload));
 
         return response()->json([
-            'status' => $wasUpdated ? CategoryVersionStatus::UPDATED->value : CategoryVersionStatus::DUPLICATE->value,
+            'status' => $status,
             'company_id' => $company->id,
             'version' => $latestVersion ? $latestVersion->version : 1,
         ], 200);

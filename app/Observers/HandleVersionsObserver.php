@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Services\VersionComparator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class HandleVersionsObserver
 {
@@ -58,6 +59,13 @@ class HandleVersionsObserver
             $versionData[$attribute] = $model->getAttribute($attribute);
         }
 
-        $versionModelClass::create($versionData);
+        $this->writeToLog($versionModelClass::create($versionData));
+    }
+
+    protected function writeToLog(Model $model): void
+    {
+        log::info('Created new Company Version: ', array_merge([
+            'id' => $model->id
+        ], $model->getAttributes()));
     }
 }
