@@ -23,7 +23,7 @@ deployment/build.sh
 ```angular2html
 docker-compose ps
 ```
-4. Доступ до проєкту:
+## Доступ до проєкту:
 - Сайт: http://localhost:8080
 - Swagger UI: http://localhost:8080/api/documentation
 - phpMyAdmin: http://localhost:8081
@@ -31,6 +31,11 @@ docker-compose ps
   - POST: **api/company** - Створення/Оновлення компанії з підтримкою версійності змін
   - GET: **api/company/{edrpou}/versions** - Перегляд всіх версій змін даних компанії за її ЄДРПОУ
   - GET: **api/companies** - Перегляд список усіх компаній збережених в системі
+
+## Команда для запуску тестів:
+```angular2html
+docker exec -it laravel_app php artisan test
+```
 
 ## Детальніше про скрипт розгортання проєкту deployment/build.sh:
 ```angular2html
